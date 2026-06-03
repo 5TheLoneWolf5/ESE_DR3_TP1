@@ -1,52 +1,29 @@
-# Projeto API CRUD FinTech
+# Sistema Monolítico Banco | Projeto de Bloco: Engenharia de Softwares Escaláveis
 
-### Manual de Execução
+### Apresentação e Documentação:
+Esta é a aplicação de um banco fictício, que contém um CRUD feito em Java com Spring Boot e outras tecnologias. A seguir são os comportamentos esperados do software:
 
-1. Clone o projeto:
+* C -> Adicionar nova conta dentro do banco de dados do banco.
+* R -> Obter dados de uma ou várias contas. 
+* U -> Editar saldo de uma conta já existente.
+* D -> Remover uma conta via ID.
 
-   * `git clone https://github.com/5TheLoneWolf5/EDDS_PB_TP3.git`
+Padrão utilizado: Controller-Service-Repository.
 
+Princípio de projeto: DDD.
 
-2. Inicie MySQL ou outro banco de dados na máquina local.
+### Diagrama de Componentes:
 
+![Diagrama de Componentes](diagrama_componentes.jpg)
 
-3. Coloque as configurações do banco de dados em _application-[banco-escolhido].properties_ dentro de _Back-end/src/main/resources_.
+### Diagrama de Sequência:
 
+![Diagrama de Sequência](diagrama_sequencia.jpg)
 
-Template do arquivo _application-[banco-escolhido].properties_:
+### Diagrama do Domínio Atual do Banco (com potencial para expansões):
 
-```
-spring.application.name=Banco-CRUD
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
-```
+![Domínio](diagrama_ddd.jpg)
 
-4. Abra a pasta _back-end_ em uma IDE Java de preferência. Faça o build e execute o programa.
+### Vídeo de Demonstração através de Testes de Uso com JUnit:
 
-
-5. (Caso desejado) Adicione a variável de ambiente `JAZZER_FUZZ` com o valor de `1` para fuzzing testing. 
-
-
-5. Na pasta _front-end_, utilize o comando para instalar os pacotes:
-
-    * `npm install`
-
-
-6. Ainda em _front-end_, utilize o comando para rodar o front-end:
-
-   * `npm run dev`
-
-Agora, é possível executar os testes com Selenium e acessar a aplicação no browser à escolha.
-
-### Vídeo
-
-https://github.com/user-attachments/assets/7c40a380-61f7-4922-9563-5b315797a1a5
-
-### Relatório de Testes
-Todos os testes estão passando e colocam à prova o funcionamento do código.
-
-### Cobertura de Testes
-#### Objetivo: 100% em Service (Regras de Negócio e Lógica - alcançado. Entity, com 87%, é apenas a modelagem de Conta). 80% geral (alcançado).
-
-![Cobertura JaCoCo](https://github.com/5TheLoneWolf5/EDDS_PB_TP1/blob/main/jacoco_coverage.jpg?raw=true)
+![Vídeo demonstrando testes das funcionalidades da aplicação](selenium_tests.mp4)
