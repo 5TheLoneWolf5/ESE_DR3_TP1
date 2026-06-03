@@ -26,4 +26,4 @@ Princípio de projeto: DDD.
 
 ### Vídeo de Demonstração através de Testes de Uso com JUnit:
 
-![Vídeo demonstrando testes das funcionalidades da aplicação](selenium_tests.mp4)
+![Vídeo demonstrando testes das funcionalidades da aplicação](https://github.com/user-attachments/assets/aaff1245-4104-41a3-a727-8aa09fc71733)
