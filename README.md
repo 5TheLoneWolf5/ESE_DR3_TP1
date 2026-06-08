@@ -12,14 +12,6 @@ Padrão utilizado: Controller-Service-Repository.
 
 Princípio de projeto: DDD.
 
-### Diagrama de Componentes:
-
-![Diagrama de Componentes](diagrama_componentes.jpg)
-
-### Diagrama de Sequência:
-
-![Diagrama de Sequência](diagrama_sequencia.jpg)
-
 ### Diagrama do Domínio Atual do Banco (com potencial para expansões):
 
 ![Domínio](diagrama_ddd.jpg)
