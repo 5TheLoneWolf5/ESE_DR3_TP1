@@ -4,12 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.example.banco.entity.Conta;
+import org.example.banco.entity.ContaHistorico;
 import org.example.banco.repository.ContaRepository;
+import org.example.banco.repository.ContaHistoricoRepository;
 import org.example.banco.service.ContaService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,6 +38,9 @@ public class ContaServiceTests {
 	@Mock
 	private ContaRepository contaRepository;
 
+	@Mock
+	private ContaHistoricoRepository contaHistoricoRepository;
+
 	@InjectMocks
 	private ContaService contaService;
 
@@ -56,8 +62,12 @@ public class ContaServiceTests {
 
 	@Property
 	void incluirNovaContaDevePersistirNoBanco(@ForAll @LongRange(min = 0) long id, @ForAll("contas") Conta conta) {
+		conta.setId(id);
+		when(contaRepository.save(conta)).thenReturn(conta);
+		
 		contaService.incluirContaDb(conta);
 		verify(contaRepository, times(1)).save(conta);
+		verify(contaHistoricoRepository, times(1)).save(any(ContaHistorico.class));
 
 		when(contaRepository.findById(id)).thenReturn(Optional.of(conta));
 		assertEquals(contaService.consultarContaDb(id), Optional.of(new Conta(conta.getNome(), conta.getSaldo())));
@@ -66,8 +76,13 @@ public class ContaServiceTests {
 	@Property
 	void excluirContaDeveApagarRegistro() {
 		long id = 1;
+		Conta conta = new Conta("John", 500D);
+		conta.setId(id);
+		when(contaRepository.findById(id)).thenReturn(Optional.of(conta));
+		
 		contaService.excluirContaDb(id);
-		verify(contaRepository, times(1)).deleteById(id);
+		verify(contaRepository, times(1)).delete(conta);
+		verify(contaHistoricoRepository, times(1)).save(any(ContaHistorico.class));
 
 		when(contaRepository.findById(id)).thenReturn(Optional.empty());
 		assertFalse(contaService.consultarContaDb(id).isPresent(), "Retorno dever ser vazio");
@@ -76,7 +91,9 @@ public class ContaServiceTests {
 	@Property
 	void alterarContaDeveMudarDado(@ForAll @LongRange(min = 0) long id) {
 		Conta contaASerAlterada = new Conta("Adam", 1400D);
+		contaASerAlterada.setId(id);
 		when(contaRepository.findById(id)).thenReturn(Optional.of(contaASerAlterada));
+		when(contaRepository.save(contaASerAlterada)).thenReturn(contaASerAlterada);
 
 		double novoSaldo = 200D;
 
@@ -84,6 +101,7 @@ public class ContaServiceTests {
 
 		assertEquals(novoSaldo, contaASerAlterada.getSaldo());
 		verify(contaRepository, times(1)).save(contaASerAlterada);
+		verify(contaHistoricoRepository, times(1)).save(any(ContaHistorico.class));
 	}
 
 	@Property

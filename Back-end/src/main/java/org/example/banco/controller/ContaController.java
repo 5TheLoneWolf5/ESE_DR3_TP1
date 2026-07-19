@@ -1,6 +1,7 @@
 package org.example.banco.controller;
 
 import org.example.banco.entity.Conta;
+import org.example.banco.entity.ContaHistorico;
 import org.example.banco.service.ContaService;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,16 @@ public class ContaController {
     public String alterarSaldo(@PathVariable("id") Long id, @PathVariable("saldo") Double saldo) {
         contaService.alterarSaldoConta(id, saldo);
         return "Saldo da conta alterada com sucesso!";
+    }
+
+    @GetMapping("/historico")
+    public List<ContaHistorico> getHistorico() {
+        return contaService.consultarHistoricoDb();
+    }
+
+    @GetMapping("/historico/{contaId}")
+    public List<ContaHistorico> getHistoricoPorConta(@PathVariable("contaId") Long contaId) {
+        return contaService.consultarHistoricoPorContaDb(contaId);
     }
 
 }

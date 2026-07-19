@@ -59,6 +59,7 @@ tasks.named('test') {
     include 'org/example/banco/ContaServiceTests.class'
     include 'org/example/banco/FuzzTests.class'
     include 'org/example/banco/NetworkTests.class'
+    include 'org/example/banco/ContaPersistenceIntegrationTests.class'
 
     testLogging {
         events = ["passed", "skipped", "failed"]

@@ -6,6 +6,7 @@ import com.code_intelligence.jazzer.mutation.annotation.NotNull;
 import net.jqwik.api.lifecycle.BeforeTry;
 import org.example.banco.entity.Conta;
 import org.example.banco.repository.ContaRepository;
+import org.example.banco.repository.ContaHistoricoRepository;
 import org.example.banco.service.ContaService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,9 @@ public class FuzzTests {
     @Mock
     private ContaRepository contaRepository;
 
+    @Mock
+    private ContaHistoricoRepository contaHistoricoRepository;
+
     @InjectMocks
     private ContaService contaService;
 
@@ -35,6 +39,8 @@ public class FuzzTests {
     @FuzzTest
     void fuzzCriarEBuscarContaCriada(@NotNull String nome, @NotNull Double saldo, @NotNull Long id) {
         Conta conta = new Conta(nome, saldo);
+        conta.setId(id);
+        when(contaRepository.save(conta)).thenReturn(conta);
 
         contaService.incluirContaDb(conta);
         when(contaRepository.findById(id)).thenReturn(Optional.of(conta));
