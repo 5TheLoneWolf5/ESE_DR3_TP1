@@ -14,7 +14,7 @@ Princípio de projeto: DDD.
 
 ### Diagrama do Domínio Atual do Banco (com potencial para expansões):
 
-<img width="762" height="442" alt="Domínio_Banco" src="https://github.com/user-attachments/assets/fadb6958-a14b-46a8-8ad6-b17feb71b52c" />
+<img width="722" height="441" alt="Domínio_Banco" src="https://github.com/user-attachments/assets/758b41e2-778b-4e7d-a906-70842cee929f" />
 
 ### Vídeo de Demonstração através de Testes de Uso com JUnit:
 
