@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="Back-end/src/main/java"/>
-	<classpathentry excluding="org/example/banco/" kind="src" path="Back-end/src/test/java"/>
-	<classpathentry kind="src" path="Back-end/src/test/java/org/example/banco"/>
-	<classpathentry kind="lib" path="Back-end/target/Banco-CRUD-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="output" path="Back-end/target/classes"/>
-</classpath>
