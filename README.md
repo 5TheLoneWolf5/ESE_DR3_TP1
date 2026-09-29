@@ -1,8 +1,3 @@
-# FinTech Bank | Sistema Bancário Distribuído
-
-### Vídeo de Apresentação:
-
-
 ---
 
 ## 1. Nome do Projeto
