@@ -1,8 +1,11 @@
 package org.example.transferencia.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface TransferenciaRepository extends JpaRepository<Transferencia, Long> {
+public interface TransferenciaRepository {
+    Transferencia save(Transferencia transferencia);
+    Optional<Transferencia> findById(Long id);
+    List<Transferencia> findAll();
+    List<Transferencia> findByStatus(StatusTransferencia status);
 }

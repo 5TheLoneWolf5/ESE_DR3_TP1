@@ -1,24 +1,16 @@
 package org.example.conta;
 
-import org.example.conta.application.ContaService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class CrudT1Application implements CommandLineRunner {
-
-    private final ContaService contaService;
-
-    public CrudT1Application(ContaService contaService) {
-        this.contaService = contaService;
-    }
+@EnableDiscoveryClient
+@EnableScheduling
+public class CrudT1Application {
 
     public static void main(String[] args) {
-        System.setProperty("spring.profiles.active", "mysql");
         SpringApplication.run(CrudT1Application.class, args);
     }
-
-    @Override
-    public void run(String... args) {}
 }

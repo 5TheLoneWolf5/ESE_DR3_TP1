@@ -1,6 +1,12 @@
 package org.example.conta.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
 
-public interface ContaRepository extends JpaRepository<Conta, Long>  {
+public interface ContaRepository {
+    Conta save(Conta conta);
+    Optional<Conta> findById(Long id);
+    List<Conta> findAll();
+    void delete(Conta conta);
+    void deleteAll();
 }

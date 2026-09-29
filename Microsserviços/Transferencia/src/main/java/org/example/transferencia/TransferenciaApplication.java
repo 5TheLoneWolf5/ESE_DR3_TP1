@@ -1,17 +1,16 @@
 package org.example.transferencia;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class TransferenciaApplication implements CommandLineRunner {
+@EnableDiscoveryClient
+@EnableScheduling
+public class TransferenciaApplication {
 
     public static void main(String[] args) {
-        System.setProperty("spring.profiles.active", "mysql");
         SpringApplication.run(TransferenciaApplication.class, args);
     }
-
-    @Override
-    public void run(String... args) {}
 }

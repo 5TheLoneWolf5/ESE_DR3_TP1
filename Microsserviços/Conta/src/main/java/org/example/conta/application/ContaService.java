@@ -1,80 +1,75 @@
 package org.example.conta.application;
 
-import org.example.conta.domain.ContaRepository;
-import org.example.conta.domain.ContaHistoricoRepository;
-import org.example.conta.domain.value_objects.Saldo;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.example.conta.domain.Conta;
-import org.example.conta.domain.ContaHistorico;
-import org.example.conta.domain.TipoOperacao;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-// Fail early aplicado no back-end e fail gracefully no front-end (com mensagens claras e seguras).
+import org.example.conta.domain.Conta;
+import org.example.conta.domain.ContaHistorico;
+import org.example.conta.domain.ContaHistoricoRepository;
+import org.example.conta.domain.ContaRepository;
+import org.example.conta.domain.TipoOperacao;
+import org.example.conta.domain.value_objects.Saldo;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class ContaService {
+
     private final ContaRepository contaRepository;
     private final ContaHistoricoRepository contaHistoricoRepository;
+    private final DebitarContaUseCase debitarContaUseCase;
+    private final CreditarContaUseCase creditarContaUseCase;
+    private final CriarContaUseCase criarContaUseCase;
+    private final ConsultarContaUseCase consultarContaUseCase;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public ContaService(ContaRepository contaRepository, ContaHistoricoRepository contaHistoricoRepository, PasswordEncoder passwordEncoder) {
+    public ContaService(
+            ContaRepository contaRepository,
+            ContaHistoricoRepository contaHistoricoRepository,
+            DebitarContaUseCase debitarContaUseCase,
+            CreditarContaUseCase creditarContaUseCase,
+            CriarContaUseCase criarContaUseCase,
+            ConsultarContaUseCase consultarContaUseCase
+    ) {
         this.contaRepository = contaRepository;
         this.contaHistoricoRepository = contaHistoricoRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.debitarContaUseCase = debitarContaUseCase;
+        this.creditarContaUseCase = creditarContaUseCase;
+        this.criarContaUseCase = criarContaUseCase;
+        this.consultarContaUseCase = consultarContaUseCase;
     }
 
-    public void debitar(Long id, BigDecimal saldo) throws IllegalArgumentException {
-        Conta conta = contaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada."));
-
-        conta.debitar(saldo);
-
-        Conta saved = contaRepository.save(conta);
-
-        // Registrar histórico de atualização
-        ContaHistorico historico = new ContaHistorico(
-                saved.getId(),
-                saved.getNome(),
-                saved.getSenha(),
-                new Saldo(saved.getSaldoValor(),saved.getSaldoMoeda()),
-                TipoOperacao.ATUALIZACAO,
-                LocalDateTime.now()
-        );
-        contaHistoricoRepository.save(historico);
+    public void debitar(Long id, BigDecimal saldo) {
+        debitarContaUseCase.execute(id, saldo, null, null);
+        Conta saved = contaRepository.findById(id).orElse(null);
+        if (saved != null) {
+            ContaHistorico historico = new ContaHistorico(
+                    saved.getId(),
+                    saved.getNome(),
+                    "",
+                    new Saldo(saved.getSaldoValor(), saved.getSaldoMoeda()),
+                    TipoOperacao.ATUALIZACAO,
+                    LocalDateTime.now()
+            );
+            contaHistoricoRepository.save(historico);
+        }
     }
 
-    public void creditar(Long id, BigDecimal saldo) throws IllegalArgumentException {
-        Conta conta = contaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada."));
-
-        conta.creditar(saldo);
-
-        Conta saved = contaRepository.save(conta);
-
-        // Registrar histórico de atualização
-        ContaHistorico historico = new ContaHistorico(
-                saved.getId(),
-                saved.getNome(),
-                saved.getSenha(),
-                new Saldo(saved.getSaldoValor(),saved.getSaldoMoeda()),
-                TipoOperacao.ATUALIZACAO,
-                LocalDateTime.now()
-        );
-        contaHistoricoRepository.save(historico);
-    }
-
-    public void registrar(String nome, String senha) {
-        String senhaEncriptada = passwordEncoder.encode(senha);
-        Conta conta = new Conta(nome, senhaEncriptada);
-        contaRepository.save(conta);
+    public void creditar(Long id, BigDecimal saldo) {
+        creditarContaUseCase.execute(id, saldo, null, null);
+        Conta saved = contaRepository.findById(id).orElse(null);
+        if (saved != null) {
+            ContaHistorico historico = new ContaHistorico(
+                    saved.getId(),
+                    saved.getNome(),
+                    "",
+                    new Saldo(saved.getSaldoValor(), saved.getSaldoMoeda()),
+                    TipoOperacao.ATUALIZACAO,
+                    LocalDateTime.now()
+            );
+            contaHistoricoRepository.save(historico);
+        }
     }
 
     public void excluirConta(Long id) {
@@ -84,12 +79,12 @@ public class ContaService {
             contaRepository.delete(conta);
 
             ContaHistorico historico = new ContaHistorico(
-                conta.getId(),
-                conta.getNome(),
-                conta.getSenha(),
-                new Saldo(conta.getSaldoValor(), conta.getSaldoMoeda()),
-                TipoOperacao.EXCLUSAO,
-                LocalDateTime.now()
+                    conta.getId(),
+                    conta.getNome(),
+                    "",
+                    new Saldo(conta.getSaldoValor(), conta.getSaldoMoeda()),
+                    TipoOperacao.EXCLUSAO,
+                    LocalDateTime.now()
             );
             contaHistoricoRepository.save(historico);
         }
@@ -97,24 +92,24 @@ public class ContaService {
 
     @Transactional(readOnly = true)
     public List<Conta> consultarContas() {
-        return contaRepository.findAll();
+        return consultarContaUseCase.todas();
     }
 
     @Transactional(readOnly = true)
     public Optional<Conta> consultarConta(Long id) {
-        return contaRepository.findById(id);
+        return consultarContaUseCase.porId(id);
     }
 
     public void incluirConta(Conta conta) {
         Conta saved = contaRepository.save(conta);
 
         ContaHistorico historico = new ContaHistorico(
-            saved.getId(),
-            saved.getNome(),
-            saved.getSenha(),
-            new Saldo(saved.getSaldoValor(),saved.getSaldoMoeda()),
-            TipoOperacao.CRIACAO,
-            LocalDateTime.now()
+                saved.getId(),
+                saved.getNome(),
+                "",
+                new Saldo(saved.getSaldoValor(), saved.getSaldoMoeda()),
+                TipoOperacao.CRIACAO,
+                LocalDateTime.now()
         );
         contaHistoricoRepository.save(historico);
     }
