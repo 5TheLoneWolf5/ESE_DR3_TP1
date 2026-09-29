@@ -1,9 +1,5 @@
----
-
 ## 1. Nome do Projeto
 **FinTech Bank - Sistema Bancário Distribuído com Arquitetura de Microsserviços e Padrão Saga**
-
----
 
 ## 2. Proposta e Tema
 
